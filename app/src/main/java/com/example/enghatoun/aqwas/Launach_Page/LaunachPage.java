@@ -18,8 +18,6 @@ public class LaunachPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launach_page);
         sugesst = (Button) findViewById(R.id.suggest);
-
-
         sugesst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

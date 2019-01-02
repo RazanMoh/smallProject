@@ -1,17 +1,19 @@
 package com.example.enghatoun.aqwas.Main.First;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.enghatoun.aqwas.HTTP.APIModel.Resturant;
 import com.example.enghatoun.aqwas.Main.FragmentNavigation;
 import com.example.enghatoun.aqwas.R;
@@ -34,33 +36,10 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mMapView = (MapView)view.findViewById(R.id.mapView);
-
-        initGoogleMap(savedInstanceState);//didn't understand
-
-        presenter = new FirstFragmentPresenter();
-        presenter.setView(this);
-        presenter.loadData(presenter.getLastLocation());
-
-        //mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity()); << same
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
-        savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_first, container, false);
-        return view;
-    }
 
     @NonNull
 
-    /*@Override
+   @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                              @NonNull Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
@@ -69,17 +48,15 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
 
         initGoogleMap(savedInstanceState);
 
-        presenter = new FirstFragmentPresenter(this);
-
+        presenter = new FirstFragmentPresenter();
         presenter.setView(this);
-
-        presenter.loadData();
+        presenter.loadData(presenter.getLastLocation());
 
         //mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
 
         return view;
     }
-*/
+
 
     private void initGoogleMap(Bundle savedInstanceState){
 
@@ -199,7 +176,13 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
         progressDialog = new ProgressDialog(getContext());
     }
 
-    @Override
+  @Override
+  public FragmentActivity getAppActivity() {
+    return this.getActivity();
+  }
+
+
+  @Override
     public void atachPresenter(FragmentNavigation.Presenter presenter) {
         navigationPresenter = presenter;
     }

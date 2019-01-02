@@ -1,5 +1,8 @@
 package com.example.enghatoun.aqwas.Main.First;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
+
 import com.example.enghatoun.aqwas.HTTP.APIModel.Resturant;
 
 
@@ -11,6 +14,8 @@ public interface FirstFragmentMVP {
         void hideProgressDialog();
         void showProgressDialog();
         void initProgressDialog();
+
+        FragmentActivity getAppActivity();
     }
 
     interface Presenter{
