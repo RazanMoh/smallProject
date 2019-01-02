@@ -132,7 +132,6 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
 
     @Override
     public void setFragment(FirstFragment fragment) {
-
     }
 
     @Override
