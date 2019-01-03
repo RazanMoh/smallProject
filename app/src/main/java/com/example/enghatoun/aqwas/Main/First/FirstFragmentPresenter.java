@@ -7,12 +7,19 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-
 import com.example.enghatoun.aqwas.HTTP.APIModel.Resturant;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import rx.Subscriber;
 
 public class FirstFragmentPresenter implements FirstFragmentMVP.Presenter {
     private FirstFragmentMVP.View view;
@@ -20,6 +27,7 @@ public class FirstFragmentPresenter implements FirstFragmentMVP.Presenter {
     private FusedLocationProviderClient mfusedLocationClient;
     private double latitud,longitude;
     private Location mLastLocation;
+    private Disposable subscription = null;
 
 
     public FirstFragmentPresenter() {
@@ -32,40 +40,71 @@ public class FirstFragmentPresenter implements FirstFragmentMVP.Presenter {
 
     @Override
     public void loadData(String str) {
-        Resturant resturant = model.getResturantFromNetwok(str);
-        view.displayData(resturant);
-    }
 
+        // RxJava
+        subscription = model.getResturantFromNetwok(str)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(new DisposableObserver<Resturant>() {
+                @Override
+                public void onNext(Resturant resturant) {
+                    if (view != null) {
+                        Log.d("444444","44445555666"+resturant.getLon()+"|||"+resturant.getLat());
+                        view.displayData(resturant);
+                    }
+                }
+
+                @Override
+                protected void onStart() {
+                    if (view != null) {
+                        view.showProgressDialog();
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
+                    if (view != null) {
+                        view.hideProgressDialog();
+                    }
+                }
+            });
+
+    }
     @Override
     public void setView(FirstFragmentMVP.View view) {
         this.view = view;
     }
 
     @Override
-    public String getLastLocation() {
-
+    public void getLastLocation() {
         mfusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getAppActivity());
 
         if (ActivityCompat.checkSelfPermission(view.getAppActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(view.getAppActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            return null;
-        }
-        mfusedLocationClient.getLastLocation().addOnCompleteListener(view.getAppActivity(), new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    mLastLocation = task.getResult();
-                    latitud = mLastLocation.getLatitude();
-                    longitude = mLastLocation.getLongitude();
-                    Log.d("4444", "late " + latitud + "long"+longitude, task.getException());
+        } else {
+            mfusedLocationClient.getLastLocation().addOnCompleteListener(view.getAppActivity(), new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        mLastLocation = task.getResult();
+                        latitud = mLastLocation.getLatitude();
+                        longitude = mLastLocation.getLongitude();
+                        Log.d("123", "latitud + \",\" + longituden");
+                        loadData(latitud + "," + longitude);
 
-                } else {
-                    Log.d("44433", "GetLastLocation:Exception", task.getException());
+                    } else {
+                        Log.v("Error", "GetLastLocation:Exception", task.getException());
+                    }
                 }
-            }
-        });
-        return latitud+","+longitude;
+            });
+
+        }
     }
 
 }

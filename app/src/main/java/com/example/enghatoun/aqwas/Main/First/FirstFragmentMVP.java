@@ -1,6 +1,5 @@
 package com.example.enghatoun.aqwas.Main.First;
 
-import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 
 import com.example.enghatoun.aqwas.HTTP.APIModel.Resturant;
@@ -21,13 +20,13 @@ public interface FirstFragmentMVP {
     interface Presenter{
 
         void getMainFragment();
-        String getLastLocation();
+        void getLastLocation();
         void loadData(String str);
         void setView(FirstFragmentMVP.View view);
 
     }
 
     interface Model{
-        Resturant getResturantFromNetwok(String str);
+        io.reactivex.Observable<Resturant> getResturantFromNetwok(String str);
     }
 }

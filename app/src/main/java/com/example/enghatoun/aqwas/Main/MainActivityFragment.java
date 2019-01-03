@@ -36,7 +36,7 @@ public class MainActivityFragment extends Fragment {
 
 
 
-    public void sendPost(String uid) {
+    /*public void sendPost(String uid) {
         mApiService.getRestaurant("26.2716025,50.2017993" , "value")
                 .enqueue(new Callback<Resturant>() {
             @Override
@@ -54,6 +54,7 @@ public class MainActivityFragment extends Fragment {
             }
         });
     }
+    */
 
 
 }

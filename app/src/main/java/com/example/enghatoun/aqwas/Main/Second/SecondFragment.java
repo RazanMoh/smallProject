@@ -76,6 +76,7 @@ public class SecondFragment extends Fragment {
                 }
             }
         });
+       // Log.v(TAG, "late33333 " + latitud + "long"+longitude);
         return latitud+","+longitude;
     }
 

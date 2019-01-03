@@ -1,23 +1,20 @@
 package com.example.enghatoun.aqwas.Main.First;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.enghatoun.aqwas.HTTP.APIModel.Resturant;
 import com.example.enghatoun.aqwas.Main.FragmentNavigation;
 import com.example.enghatoun.aqwas.R;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,7 +22,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 public class FirstFragment extends Fragment implements OnMapReadyCallback , FirstFragmentMVP.View, FragmentNavigation.View{
     protected FragmentNavigation.Presenter navigationPresenter;
     private MapView mMapView;
-    private FusedLocationProviderClient mfusedLocationClient;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     private FirstFragmentMVP.Presenter presenter;
 
@@ -36,9 +32,7 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
         super.onCreate(savedInstanceState);
     }
 
-
-    @NonNull
-
+   @NonNull
    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                              @NonNull Bundle savedInstanceState) {
@@ -46,13 +40,13 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
 
         mMapView = (MapView)view.findViewById(R.id.mapView);
 
+        initProgressDialog();
+
         initGoogleMap(savedInstanceState);
 
         presenter = new FirstFragmentPresenter();
         presenter.setView(this);
-        presenter.loadData(presenter.getLastLocation());
-
-        //mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+        presenter.getLastLocation();
 
         return view;
     }
@@ -66,7 +60,6 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
         }
 
         mMapView.onCreate(mapViewBundle);
-
         mMapView.getMapAsync(this);
     }
 
@@ -136,7 +129,9 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback , Firs
 
     @Override
     public void displayData(Resturant resturant) {//displayData(Resturant resturant)
-        //UI
+      Log.v("222223333", "resturant.getName()" + resturant.getName());
+      Log.v("222223333", "resturant.getCat()" + resturant.getCat());
+      Log.v("222223333", "resturant.getRating()" + resturant.getRating());
     }
 
     @Override
